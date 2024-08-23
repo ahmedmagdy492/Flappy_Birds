@@ -116,8 +116,10 @@ class GameScene : public Scene {
 private:
 	SceneManager* sceneManager;
 	ImageUI floorImg;
+	ImageUI getReadyText;
 	Player player;
 	RenderingMode currentRenderingMode = RenderingMode::Normal;
+	bool hasStarted = false;
 
 	std::vector<std::pair<Pipe*, Pipe*>> pipesPool;
 

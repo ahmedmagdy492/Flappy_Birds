@@ -122,8 +122,11 @@ GameScene::GameScene(SceneManager* sceneManager) : Scene("GameScene") {
 	float height = GetScreenHeight();
 	float width = GetScreenWidth();
 
-	floorImg.textureAtlasCoords = { 586, 0, 333, 112 };
-	floorImg.screenCoords = { 0, height - FLOOR_HEIGHT, 333, FLOOR_HEIGHT };
+	floorImg.textureAtlasCoords = { 586.0f, 0.0f, 333.0f, 112.0f };
+	floorImg.screenCoords = { 0.0f, height - FLOOR_HEIGHT, 333.0f, FLOOR_HEIGHT };
+
+	getReadyText.textureAtlasCoords = { 586.0f, 112.0f, 196.0f, 62.0f };
+	getReadyText.screenCoords = { (width - getReadyText.textureAtlasCoords.width) / 2, (height - getReadyText.textureAtlasCoords.height) / 2, getReadyText.textureAtlasCoords.width, getReadyText.textureAtlasCoords.height };
 
 	// adding 2 here as backup pipes to be able to remove pipes with x less than 0
 	// without the user noticing
@@ -174,13 +177,20 @@ void GameScene::Update() {
 		}
 	}
 
-	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-		Vector2 velocity = { 0.0f, -30.0f };
-		player.Move(velocity);
+	if (hasStarted) {
+		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+			Vector2 velocity = { 0.0f, -30.0f };
+			player.Move(velocity);
+		}
+		else {
+			Vector2 velocity = { 0.0f, 1.5f };
+			player.Move(velocity);
+		}
 	}
 	else {
-		Vector2 velocity = { 0.0f, 1.5f };
-		player.Move(velocity);
+		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+			hasStarted = true;
+		}
 	}
 
 	for (auto pair : pipesPool) {
@@ -204,13 +214,19 @@ void GameScene::Render(RenderMetaData metaData) {
 
 	for (auto pair : pipesPool) {
 		pair.first->Draw(metaData);
-		pair.first->Move({-2.0f, 0.0f});
+		if (hasStarted) {
+			pair.first->Move({ -2.0f, 0.0f });
+		}
+
 		if (currentRenderingMode == RenderingMode::ShowBoundingBoxes) {
 			DrawRectangleLinesEx(pair.first->GetScreenCoords(), 2, RED);
 		}
 
 		pair.second->Draw(metaData);
-		pair.second->Move({ -2.0f, 0.0f });
+		if (hasStarted) {
+			pair.second->Move({ -2.0f, 0.0f });
+		}
+
 		if (currentRenderingMode == RenderingMode::ShowBoundingBoxes) {
 			DrawRectangleLinesEx(pair.second->GetScreenCoords(), 2, RED);
 		}
@@ -244,6 +260,10 @@ void GameScene::Render(RenderMetaData metaData) {
 
 	// rendering the player score
 	DrawText(TextFormat("%i", player.GetScore()), width / 2, 40, 44, RAYWHITE);
+
+	if(!hasStarted) {
+		getReadyText.Draw(metaData);
+	}
 }
 
 GameScene::~GameScene() {
