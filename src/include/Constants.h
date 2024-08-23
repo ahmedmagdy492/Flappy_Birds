@@ -9,5 +9,5 @@
 #define PIPE_WIDTH 150
 #define PIPE_HEIGHT 420
 
-#define PLAYER_WIDTH 100
-#define PLAYER_HEIGHT 100
+#define PLAYER_WIDTH 80
+#define PLAYER_HEIGHT 60

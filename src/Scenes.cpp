@@ -165,6 +165,15 @@ bool IsCollidingWithPipe(Rectangle coords1, Rectangle coords2) {
 void GameScene::Update() {
  	Vector2 mousePos = GetMousePosition();
 
+	if (IsKeyPressed(KEY_B)) {
+		if (currentRenderingMode == RenderingMode::Normal) {
+			currentRenderingMode = RenderingMode::ShowBoundingBoxes;
+		}
+		else {
+			currentRenderingMode = RenderingMode::Normal;
+		}
+	}
+
 	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 		Vector2 velocity = { 0.0f, -30.0f };
 		player.Move(velocity);
@@ -196,9 +205,15 @@ void GameScene::Render(RenderMetaData metaData) {
 	for (auto pair : pipesPool) {
 		pair.first->Draw(metaData);
 		pair.first->Move({-2.0f, 0.0f});
+		if (currentRenderingMode == RenderingMode::ShowBoundingBoxes) {
+			DrawRectangleLinesEx(pair.first->GetScreenCoords(), 2, RED);
+		}
 
 		pair.second->Draw(metaData);
 		pair.second->Move({ -2.0f, 0.0f });
+		if (currentRenderingMode == RenderingMode::ShowBoundingBoxes) {
+			DrawRectangleLinesEx(pair.second->GetScreenCoords(), 2, RED);
+		}
 
 		Rectangle pipeScreenCoords = pair.first->GetScreenCoords();
 		if ((pipeScreenCoords.x + pipeScreenCoords.width) < 0) {
@@ -223,6 +238,9 @@ void GameScene::Render(RenderMetaData metaData) {
 	}
 
 	player.Draw(metaData);
+	if (currentRenderingMode == RenderingMode::ShowBoundingBoxes) {
+		DrawRectangleLinesEx(player.GetScreenCoords(), 2, RED);
+	}
 
 	// rendering the player score
 	DrawText(TextFormat("%i", player.GetScore()), width / 2, 40, 44, RAYWHITE);

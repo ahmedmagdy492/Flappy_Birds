@@ -94,6 +94,11 @@ public:
 	~SceneManager();
 };
 
+enum RenderingMode : unsigned char {
+	Normal,
+	ShowBoundingBoxes
+};
+
 class MenuScene : public Scene {
 private:
 	ImageUI titleText;
@@ -112,6 +117,8 @@ private:
 	SceneManager* sceneManager;
 	ImageUI floorImg;
 	Player player;
+	RenderingMode currentRenderingMode = RenderingMode::Normal;
+
 	std::vector<std::pair<Pipe*, Pipe*>> pipesPool;
 
 public:

@@ -4,7 +4,7 @@ Player::Player() : score(0) {
 	float height = GetScreenHeight();
 	float width = GetScreenWidth();
 
-	img.textureAtlasCoords = { 230, 750, 43, 43 };
+	img.textureAtlasCoords = { 230, 760, 35, 30 };
 	img.screenCoords = { 30, (height - PLAYER_HEIGHT) / 2, PLAYER_WIDTH, PLAYER_HEIGHT };
 }
 
