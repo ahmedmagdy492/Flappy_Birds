@@ -133,6 +133,9 @@ private:
 	Player player;
 	RenderingMode currentRenderingMode = RenderingMode::Normal;
 	bool hasStarted = false;
+	Sound swooshingSound;
+	Sound pointSound;
+	Sound hitSound;
 
 	std::vector<std::pair<Pipe*, Pipe*>> pipesPool;
 	std::vector<Floor*> floors;

@@ -8,7 +8,15 @@ int main() {
 
 	SetTargetFPS(60);
 
-	Texture2D textureAtlas = LoadTexture("resources\\texture_atlas.png");
+	ClearBackground(BLACK);
+	BeginDrawing();
+	int loadingTxtWidth = MeasureText("Loading...", 35);
+	DrawText("Loading...", (GetScreenWidth() - loadingTxtWidth) / 2, (GetScreenHeight() - 35) / 2, 35, WHITE);
+	EndDrawing();
+
+	InitAudioDevice();
+
+	Texture2D textureAtlas = LoadTexture("resources/texture_atlas.png");
 
 	SceneManager sceneManager;
 	RenderMetaData renderMetaData;
@@ -25,6 +33,8 @@ int main() {
 	}
 
 	UnloadTexture(textureAtlas);
+
+	CloseAudioDevice();
 
 	CloseWindow();
 }

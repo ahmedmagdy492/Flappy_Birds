@@ -12,3 +12,7 @@
 
 #define PLAYER_WIDTH 80.0f
 #define PLAYER_HEIGHT 60.0f
+
+#define PLATFORM_MOVING_SPEED -4.0f
+#define PLAYER_MASS 2.0f
+#define GRAVITY_FORCE 2.0f

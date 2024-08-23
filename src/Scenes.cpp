@@ -118,6 +118,10 @@ void MenuScene::Render(RenderMetaData metaData) {
 }
 
 GameScene::GameScene(SceneManager* sceneManager) : Scene("GameScene") {
+	swooshingSound = LoadSound("resources/sfx_swooshing.wav");
+	pointSound = LoadSound("resources/sfx_point.wav");
+	hitSound = LoadSound("resources/sfx_die.wav");
+
 	this->sceneManager = sceneManager;
 	float height = GetScreenHeight();
 	float width = GetScreenWidth();
@@ -185,11 +189,12 @@ void GameScene::Update() {
 
 	if (hasStarted) {
 		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-			Vector2 velocity = { 0.0f, -30.0f };
+			PlaySound(swooshingSound);
+			Vector2 velocity = { 0.0f, -30.0f * PLAYER_MASS };
 			player.Move(velocity);
 		}
 		else {
-			Vector2 velocity = { 0.0f, 1.5f };
+			Vector2 velocity = { 0.0f, 1.5f * GRAVITY_FORCE };
 			player.Move(velocity);
 		}
 	}
@@ -202,6 +207,7 @@ void GameScene::Update() {
 	for (auto pair : pipesPool) {
 		if (IsCollidingWithPipe(player.GetScreenCoords(), pair.first->GetScreenCoords()) || 
 			IsCollidingWithPipe(player.GetScreenCoords(), pair.second->GetScreenCoords())) {
+			PlaySound(hitSound);
 			std::string playerScore(TextFormat("%i", player.GetScore()));
 			sceneManager->SetCacheEntry("score", playerScore);
 			sceneManager->SetActiveScene("GameOverScene");
@@ -222,7 +228,7 @@ void GameScene::Render(RenderMetaData metaData) {
 	for (auto pair : pipesPool) {
 		pair.first->Draw(metaData);
 		if (hasStarted) {
-			pair.first->Move({ -2.0f, 0.0f });
+			pair.first->Move({ PLATFORM_MOVING_SPEED, 0.0f });
 		}
 
 		if (currentRenderingMode == RenderingMode::ShowBoundingBoxes) {
@@ -231,7 +237,7 @@ void GameScene::Render(RenderMetaData metaData) {
 
 		pair.second->Draw(metaData);
 		if (hasStarted) {
-			pair.second->Move({ -2.0f, 0.0f });
+			pair.second->Move({ PLATFORM_MOVING_SPEED, 0.0f });
 		}
 
 		if (currentRenderingMode == RenderingMode::ShowBoundingBoxes) {
@@ -250,6 +256,7 @@ void GameScene::Render(RenderMetaData metaData) {
 			pair.second->SetScreenCoords(newScreenCoords);
 
 			player.SetScore(player.GetScore() + 1);
+			PlaySound(pointSound);
 		}
 	}
 
@@ -257,7 +264,7 @@ void GameScene::Render(RenderMetaData metaData) {
 	for (auto floor : floors) {
 		floor->Draw(metaData);
 		if (hasStarted) {
-			floor->Move({ -2.0f, 0.0f });
+			floor->Move({ PLATFORM_MOVING_SPEED, 0.0f });
 		}
 
 		Rectangle floorScreenCoords = floor->GetScreenCoords();
@@ -292,6 +299,10 @@ GameScene::~GameScene() {
 		delete floor;
 	}
 	floors.clear();
+
+	UnloadSound(swooshingSound);
+	UnloadSound(pointSound);
+	UnloadSound(hitSound);
 }
 
 GameOverScene::GameOverScene(SceneManager* sceneManager) : Scene("GameOverScene") {
@@ -327,7 +338,8 @@ void GameOverScene::Render(RenderMetaData metaData) {
 
 	if (sceneManager->CacheContainsKey("score")) {
 		const std::string& playerScore = sceneManager->GetCacheEntryValue("score");
-		DrawText(playerScore.c_str(), (width - 20) / 2, gameOverImg.screenCoords.y + gameOverImg.screenCoords.height + 20, 44, RAYWHITE);
+		int size = MeasureText(playerScore.c_str(), 44);
+		DrawText(playerScore.c_str(), (width - size) / 2, gameOverImg.screenCoords.y + gameOverImg.screenCoords.height + 20, 44, RAYWHITE);
 	}
 
 	playBtn.Draw(metaData);
