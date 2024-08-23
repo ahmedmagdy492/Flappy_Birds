@@ -59,6 +59,20 @@ public:
 	void Move(Vector2 velocity);
 };
 
+class Floor {
+private:
+	ImageUI img;
+
+public:
+	Floor();
+
+	Rectangle GetScreenCoords() const;
+	void SetScreenCoords(Rectangle newValue);
+
+	void Draw(RenderMetaData metaData) const;
+	void Move(Vector2 velocity);
+};
+
 // Scene Models
 
 class Scene {
@@ -115,13 +129,13 @@ public:
 class GameScene : public Scene {
 private:
 	SceneManager* sceneManager;
-	ImageUI floorImg;
 	ImageUI getReadyText;
 	Player player;
 	RenderingMode currentRenderingMode = RenderingMode::Normal;
 	bool hasStarted = false;
 
 	std::vector<std::pair<Pipe*, Pipe*>> pipesPool;
+	std::vector<Floor*> floors;
 
 public:
 	GameScene(SceneManager* sceneManager);

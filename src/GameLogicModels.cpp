@@ -36,12 +36,12 @@ Pipe::Pipe(float rotation, bool isUpperPipe) : rotation(rotation), isUpperPipe(i
 	float width = GetScreenWidth();
 
 	if (isUpperPipe) {
-		img.textureAtlasCoords = { 110, 650, 52, 320 };
+		img.textureAtlasCoords = { 110.0f, 650.0f, 52.0f, 320.0f };
 	}
 	else {
-		img.textureAtlasCoords = { 170, 650, 52, 320 };
+		img.textureAtlasCoords = { 170.0f, 650.0f, 52.0f, 320.0f };
 	}
-	img.screenCoords = { width / 2, height / 2, PIPE_WIDTH, PIPE_HEIGHT };
+	img.screenCoords = { width / 2.0f, height / 2.0f, PIPE_WIDTH, PIPE_HEIGHT };
 }
 
 Rectangle Pipe::GetScreenCoords() const {
@@ -53,7 +53,7 @@ void Pipe::SetScreenCoords(Rectangle newValue) {
 }
 
 void Pipe::Draw(RenderMetaData metaData) const {
-	DrawTexturePro(*(metaData.textureAtlas), img.textureAtlasCoords, img.screenCoords, { 0, 0 }, rotation, RAYWHITE);
+	DrawTexturePro(*(metaData.textureAtlas), img.textureAtlasCoords, img.screenCoords, { 0.0f, 0.0f }, rotation, RAYWHITE);
 }
 
 /// <summary>
@@ -61,5 +61,29 @@ void Pipe::Draw(RenderMetaData metaData) const {
 /// </summary>
 /// <param name="velocity"></param>
 void Pipe::Move(Vector2 velocity) {
+	img.screenCoords.x += velocity.x;
+}
+
+Floor::Floor() {
+	float height = GetScreenHeight();
+	float width = GetScreenWidth();
+
+	img.textureAtlasCoords = { 586.0f, 0.0f, FLOOR_WIDTH, 112.0f };
+	img.screenCoords = { 0.0f, height - FLOOR_HEIGHT, FLOOR_WIDTH, FLOOR_HEIGHT };
+}
+
+Rectangle Floor::GetScreenCoords() const {
+	return img.screenCoords;
+}
+
+void Floor::SetScreenCoords(Rectangle newValue) {
+	img.screenCoords = newValue;
+}
+
+void Floor::Draw(RenderMetaData metaData) const {
+	DrawTexturePro(*(metaData.textureAtlas), img.textureAtlasCoords, img.screenCoords, { 0.0f, 0.0f }, 0.0f, RAYWHITE);
+}
+
+void Floor::Move(Vector2 velocity) {
 	img.screenCoords.x += velocity.x;
 }

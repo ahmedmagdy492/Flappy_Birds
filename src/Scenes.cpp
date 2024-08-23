@@ -122,15 +122,21 @@ GameScene::GameScene(SceneManager* sceneManager) : Scene("GameScene") {
 	float height = GetScreenHeight();
 	float width = GetScreenWidth();
 
-	floorImg.textureAtlasCoords = { 586.0f, 0.0f, 333.0f, 112.0f };
-	floorImg.screenCoords = { 0.0f, height - FLOOR_HEIGHT, 333.0f, FLOOR_HEIGHT };
+	int noOfFloorsToBePlaced = round(width / FLOOR_WIDTH) + 10;
+
+	for (int i = 0; i < noOfFloorsToBePlaced; ++i) {
+		Floor* floor = new Floor();
+		Rectangle floorCoords = floor->GetScreenCoords();
+		floor->SetScreenCoords({ i * floorCoords.width, height - floorCoords.height, floorCoords.width, floorCoords.height });
+		floors.push_back(floor);
+	}
 
 	getReadyText.textureAtlasCoords = { 586.0f, 112.0f, 196.0f, 62.0f };
 	getReadyText.screenCoords = { (width - getReadyText.textureAtlasCoords.width) / 2, (height - getReadyText.textureAtlasCoords.height) / 2, getReadyText.textureAtlasCoords.width, getReadyText.textureAtlasCoords.height };
 
 	// adding 2 here as backup pipes to be able to remove pipes with x less than 0
 	// without the user noticing
-	int noOfPipesOnTheScreen = round(width / (floorImg.screenCoords.width)) + 2;
+	int noOfPipesOnTheScreen = round(width / (FLOOR_WIDTH)) + 2;
 
 	for (int i = 0; i < noOfPipesOnTheScreen; ++i) {
 		// lower pipe
@@ -207,9 +213,10 @@ void GameScene::Render(RenderMetaData metaData) {
 	float height = GetScreenHeight();
 	float width = GetScreenWidth();
 
+	// drawing the background
 	int noOfRenderingTimesHor = round(width / 512.0f);
 	for (int i = 0; i < noOfRenderingTimesHor; ++i) {
-		DrawTexturePro(*(metaData.textureAtlas), { 300, 0, 275, 512 }, { i * 512.0f, 0, 512, height }, { 0, 0 }, 0.0, RAYWHITE);
+		DrawTexturePro(*(metaData.textureAtlas), { 300.0f, 0.0f, 275.0f, 512.0f }, { i * 512.0f, 0.0f, 512.0f, height }, { 0.0f, 0.0f }, 0.0f, RAYWHITE);
 	}
 
 	for (auto pair : pipesPool) {
@@ -234,7 +241,7 @@ void GameScene::Render(RenderMetaData metaData) {
 		Rectangle pipeScreenCoords = pair.first->GetScreenCoords();
 		if ((pipeScreenCoords.x + pipeScreenCoords.width) < 0) {
 			
-			pipeScreenCoords.x = height + (2 * (PIPE_WIDTH + OFFSET_BETWEEN_PIPE_X)) + OFFSET_BETWEEN_PIPE_X + 300;
+			pipeScreenCoords.x = width + ((PIPE_WIDTH + OFFSET_BETWEEN_PIPE_X));
 
 			float randomYValue = GetRandomValue(height - (FLOOR_HEIGHT + pipeScreenCoords.height), height - pipeScreenCoords.height);
 			pipeScreenCoords.y = randomYValue;
@@ -246,11 +253,19 @@ void GameScene::Render(RenderMetaData metaData) {
 		}
 	}
 
-	int noOfFloorsToBePlaced = round(width / floorImg.screenCoords.width);
+	// drawing the floor
+	for (auto floor : floors) {
+		floor->Draw(metaData);
+		if (hasStarted) {
+			floor->Move({ -2.0f, 0.0f });
+		}
 
-	for (int i = 0; i < noOfFloorsToBePlaced; ++i) {
-		floorImg.Draw(metaData);
-		floorImg.screenCoords.x = i * floorImg.screenCoords.width;
+		Rectangle floorScreenCoords = floor->GetScreenCoords();
+		if ((floorScreenCoords.x + floorScreenCoords.width) < 0) {
+			floorScreenCoords.x = width;
+			floorScreenCoords.y = height - floorScreenCoords.height;
+			floor->SetScreenCoords(floorScreenCoords);
+		}
 	}
 
 	player.Draw(metaData);
@@ -272,6 +287,11 @@ GameScene::~GameScene() {
 		delete pair.second;
 	}
 	pipesPool.clear();
+
+	for (auto floor : floors) {
+		delete floor;
+	}
+	floors.clear();
 }
 
 GameOverScene::GameOverScene(SceneManager* sceneManager) : Scene("GameOverScene") {
