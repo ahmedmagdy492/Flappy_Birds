@@ -180,6 +180,7 @@ bool IsCollidingWithPipe(Rectangle coords1, Rectangle coords2) {
 
 void GameScene::Update() {
  	Vector2 mousePos = GetMousePosition();
+	float height = GetScreenHeight();
 
 	if (IsKeyPressed(KEY_B)) {
 		if (currentRenderingMode == RenderingMode::Normal) {
@@ -194,11 +195,15 @@ void GameScene::Update() {
 		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 			PlaySound(swooshingSound);
 			Vector2 velocity = { 0.0f, -30.0f * PLAYER_MASS };
-			player.Move(velocity);
+			if (!player.IsDead()) {
+				player.Move(velocity);
+			}
 		}
 		else {
 			Vector2 velocity = { 0.0f, 1.5f * GRAVITY_FORCE };
-			player.Move(velocity);
+			if (!player.IsDead()) {
+				player.Move(velocity);
+			}
 		}
 	}
 	else {
@@ -209,8 +214,9 @@ void GameScene::Update() {
 
 	for (auto pair : pipesPool) {
 		if (IsCollidingWithPipe(player.GetScreenCoords(), pair.first->GetScreenCoords()) || 
-			IsCollidingWithPipe(player.GetScreenCoords(), pair.second->GetScreenCoords())) {
+			IsCollidingWithPipe(player.GetScreenCoords(), pair.second->GetScreenCoords()) || player.GetScreenCoords().y > height) {
 			PlaySound(hitSound);
+			player.SetIsDead(true);
 			std::string playerScore(TextFormat("%i", player.GetScore()));
 			sceneManager->SetCacheEntry("score", playerScore);
 			sceneManager->SetActiveScene("GameOverScene");

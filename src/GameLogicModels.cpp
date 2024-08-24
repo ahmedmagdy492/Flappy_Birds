@@ -26,6 +26,14 @@ void Player::Move(Vector2 velocity) {
 	}
 }
 
+bool Player::IsDead() const {
+	return isDead;
+}
+
+void Player::SetIsDead(bool isDead) {
+	this->isDead = isDead;
+}
+
 unsigned int Player::GetScore() const {
 	return score;
 }
@@ -46,7 +54,7 @@ Pipe::Pipe(float rotation, bool isUpperPipe) : rotation(rotation), isUpperPipe(i
 		img.textureAtlasCoords = { 110.0f, 650.0f, 52.0f, 320.0f };
 	}
 	else {
-		img.textureAtlasCoords = { 170.0f, 650.0f, 52.0f, 320.0f };
+		img.textureAtlasCoords = { 170.0f, 640.0f, 52.0f, 320.0f };
 	}
 	img.screenCoords = { width / 2.0f, height / 2.0f, PIPE_WIDTH, PIPE_HEIGHT };
 }

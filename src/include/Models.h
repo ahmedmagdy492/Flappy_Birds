@@ -32,6 +32,7 @@ private:
 	unsigned int score;
 	float rotation;
 	ImageUI img;
+	bool isDead = false;
 	Rectangle textureAtlasCoords[NO_OF_PLAYER_ANIM_FRAMES] = {
 		{ 230, 760, 35, 30 },
 		{ 230, 810, 35, 30 },
@@ -46,6 +47,9 @@ public:
 	void SetScore(int newValue);
 
 	Rectangle GetScreenCoords() const;
+
+	bool IsDead() const;
+	void SetIsDead(bool isDead);
 
 	void Draw(RenderMetaData metaData);
 	void Move(Vector2 velocity);
