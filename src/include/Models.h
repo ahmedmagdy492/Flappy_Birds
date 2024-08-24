@@ -130,6 +130,7 @@ class GameScene : public Scene {
 private:
 	SceneManager* sceneManager;
 	ImageUI getReadyText;
+	ImageUI tutorialImg;
 	Player player;
 	RenderingMode currentRenderingMode = RenderingMode::Normal;
 	bool hasStarted = false;

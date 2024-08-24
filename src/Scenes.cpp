@@ -138,6 +138,9 @@ GameScene::GameScene(SceneManager* sceneManager) : Scene("GameScene") {
 	getReadyText.textureAtlasCoords = { 586.0f, 112.0f, 196.0f, 62.0f };
 	getReadyText.screenCoords = { (width - getReadyText.textureAtlasCoords.width) / 2, (height - getReadyText.textureAtlasCoords.height) / 2, getReadyText.textureAtlasCoords.width, getReadyText.textureAtlasCoords.height };
 
+	tutorialImg.textureAtlasCoords = { 586.0f, 180.0f, 114.0f, 98.0f };
+	tutorialImg.screenCoords = { (width - (tutorialImg.textureAtlasCoords.width + 50)) / 2, (getReadyText.screenCoords.y - tutorialImg.textureAtlasCoords.height - 70), tutorialImg.textureAtlasCoords.width + 50, tutorialImg.textureAtlasCoords.height + 50 };
+
 	// adding 2 here as backup pipes to be able to remove pipes with x less than 0
 	// without the user noticing
 	int noOfPipesOnTheScreen = round(width / (FLOOR_WIDTH)) + 2;
@@ -149,7 +152,7 @@ GameScene::GameScene(SceneManager* sceneManager) : Scene("GameScene") {
 		float randomYValue = GetRandomValue(height - (FLOOR_HEIGHT + screenCoordsPipe1.height), height - screenCoordsPipe1.height);
 		pipe1->SetScreenCoords(
 			{
-				PIPE_STARTING_OFFSET_X + (screenCoordsPipe1.width + OFFSET_BETWEEN_PIPE_X) * i,
+				width + (screenCoordsPipe1.width + OFFSET_BETWEEN_PIPE_X) * i,
 				randomYValue,
 				screenCoordsPipe1.width,
 				screenCoordsPipe1.height
@@ -161,7 +164,7 @@ GameScene::GameScene(SceneManager* sceneManager) : Scene("GameScene") {
 		Rectangle screenCoordsPipe2 = pipe2->GetScreenCoords();
 		pipe2->SetScreenCoords(
 			{ 
-				PIPE_STARTING_OFFSET_X + (screenCoordsPipe2.width + OFFSET_BETWEEN_PIPE_X) * i, 
+				width + (screenCoordsPipe2.width + OFFSET_BETWEEN_PIPE_X) * i, 
 				randomYValue - OFFSET_BETWEEN_PIPE_Y - screenCoordsPipe2.height,
 				screenCoordsPipe2.width,
 				screenCoordsPipe2.height
@@ -263,9 +266,7 @@ void GameScene::Render(RenderMetaData metaData) {
 	// drawing the floor
 	for (auto floor : floors) {
 		floor->Draw(metaData);
-		if (hasStarted) {
-			floor->Move({ PLATFORM_MOVING_SPEED, 0.0f });
-		}
+		floor->Move({ PLATFORM_MOVING_SPEED, 0.0f });
 
 		Rectangle floorScreenCoords = floor->GetScreenCoords();
 		if ((floorScreenCoords.x + floorScreenCoords.width) < 0) {
@@ -285,6 +286,7 @@ void GameScene::Render(RenderMetaData metaData) {
 
 	if(!hasStarted) {
 		getReadyText.Draw(metaData);
+		tutorialImg.Draw(metaData);
 	}
 }
 
