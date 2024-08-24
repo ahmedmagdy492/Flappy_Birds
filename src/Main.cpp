@@ -6,12 +6,14 @@ int main() {
 	int height = GetScreenHeight();
 	InitWindow(width, height, "Flappy Birds");
 
+	Font font = LoadFont("resources/flappy_font.TTF");
+
 	SetTargetFPS(60);
 
 	ClearBackground(BLACK);
 	BeginDrawing();
-	int loadingTxtWidth = MeasureText("Loading...", 35);
-	DrawText("Loading...", (GetScreenWidth() - loadingTxtWidth) / 2, (GetScreenHeight() - 35) / 2, 35, WHITE);
+	Vector2 loadingTxtWidth = MeasureTextEx(font, "Loading...", 35.0f, 0.0f);
+	DrawTextEx(font, "Loading...", { (GetScreenWidth() - loadingTxtWidth.x) / 2, (GetScreenHeight() - 35.0f) / 2.0f }, 35.0f, 0.0f, WHITE);
 	EndDrawing();
 
 	InitAudioDevice();
@@ -21,6 +23,7 @@ int main() {
 	SceneManager sceneManager;
 	RenderMetaData renderMetaData;
 	renderMetaData.textureAtlas = &textureAtlas;
+	renderMetaData.curFont = font;
 
 	while (!WindowShouldClose()) {
 		ClearBackground(RAYWHITE);
@@ -33,6 +36,8 @@ int main() {
 	}
 
 	UnloadTexture(textureAtlas);
+
+	UnloadFont(font);
 
 	CloseAudioDevice();
 

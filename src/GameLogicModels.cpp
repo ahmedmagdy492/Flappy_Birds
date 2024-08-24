@@ -1,6 +1,6 @@
 #include "include\Models.h"
 
-Player::Player() : score(0) {
+Player::Player() : score(0), rotation(0.0f) {
 	float height = GetScreenHeight();
 	float width = GetScreenWidth();
 
@@ -9,10 +9,10 @@ Player::Player() : score(0) {
 }
 
 void Player::Draw(RenderMetaData metaData) {
-	DrawTexturePro(*(metaData.textureAtlas), textureAtlasCoords[curAnimFrameIndex], img.screenCoords, {0, 0}, 0.0f, RAYWHITE);
+	DrawTexturePro(*(metaData.textureAtlas), textureAtlasCoords[curAnimFrameIndex], img.screenCoords, {0, 0}, rotation, RAYWHITE);
 	if ((int)(GetTime()* 60) % 10 == 0) {
 		++curAnimFrameIndex;
-		if (curAnimFrameIndex >= 3) {
+		if (curAnimFrameIndex >= NO_OF_PLAYER_ANIM_FRAMES) {
 			curAnimFrameIndex = 0;
 		}
 	}
@@ -22,6 +22,7 @@ void Player::Draw(RenderMetaData metaData) {
 void Player::Move(Vector2 velocity) {
 	if ((img.screenCoords.y + velocity.y) > 0) {
 		img.screenCoords.y += velocity.y;
+		//rotation = velocity.y * PLAYER_ROTATION_SPEED;
 	}
 }
 

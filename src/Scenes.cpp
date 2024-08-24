@@ -282,7 +282,7 @@ void GameScene::Render(RenderMetaData metaData) {
 	}
 
 	// rendering the player score
-	DrawText(TextFormat("%i", player.GetScore()), width / 2, 40, 44, RAYWHITE);
+	DrawTextEx(metaData.curFont, TextFormat("%i", player.GetScore()), { width / 2, 40 }, 44.0f, 0.0f, RAYWHITE);
 
 	if(!hasStarted) {
 		getReadyText.Draw(metaData);
@@ -340,8 +340,9 @@ void GameOverScene::Render(RenderMetaData metaData) {
 
 	if (sceneManager->CacheContainsKey("score")) {
 		const std::string& playerScore = sceneManager->GetCacheEntryValue("score");
-		int size = MeasureText(playerScore.c_str(), 44);
-		DrawText(playerScore.c_str(), (width - size) / 2, gameOverImg.screenCoords.y + gameOverImg.screenCoords.height + 20, 44, RAYWHITE);
+		Vector2 size = MeasureTextEx(metaData.curFont, playerScore.c_str(), 44.0f, 0.0f);
+		DrawTextEx(metaData.curFont, playerScore.c_str(), {(width - size.x) / 2, gameOverImg.screenCoords.y + gameOverImg.screenCoords.height + 20
+	}, 44.0f, 0.0f, RAYWHITE);
 	}
 
 	playBtn.Draw(metaData);

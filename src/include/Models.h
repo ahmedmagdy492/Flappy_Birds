@@ -13,6 +13,7 @@ extern "C" {
 
 struct RenderMetaData {
 	Texture2D* textureAtlas = nullptr;
+	Font curFont;
 };
 
 // UI Models
@@ -29,8 +30,9 @@ struct ImageUI {
 class Player {
 private:
 	unsigned int score;
+	float rotation;
 	ImageUI img;
-	Rectangle textureAtlasCoords[3] = {
+	Rectangle textureAtlasCoords[NO_OF_PLAYER_ANIM_FRAMES] = {
 		{ 230, 760, 35, 30 },
 		{ 230, 810, 35, 30 },
 		{ 230, 860, 35, 30 }
