@@ -30,6 +30,12 @@ class Player {
 private:
 	unsigned int score;
 	ImageUI img;
+	Rectangle textureAtlasCoords[3] = {
+		{ 230, 760, 35, 30 },
+		{ 230, 810, 35, 30 },
+		{ 230, 860, 35, 30 }
+	};
+	unsigned short curAnimFrameIndex = 0;
 
 public:
 	Player();
@@ -39,7 +45,7 @@ public:
 
 	Rectangle GetScreenCoords() const;
 
-	void Draw(RenderMetaData metaData) const;
+	void Draw(RenderMetaData metaData);
 	void Move(Vector2 velocity);
 };
 

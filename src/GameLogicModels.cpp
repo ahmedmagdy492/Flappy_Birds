@@ -4,12 +4,18 @@ Player::Player() : score(0) {
 	float height = GetScreenHeight();
 	float width = GetScreenWidth();
 
-	img.textureAtlasCoords = { 230, 760, 35, 30 };
+	img.textureAtlasCoords = textureAtlasCoords[curAnimFrameIndex];
 	img.screenCoords = { 30, (height - PLAYER_HEIGHT) / 2, PLAYER_WIDTH, PLAYER_HEIGHT };
 }
 
-void Player::Draw(RenderMetaData metaData) const {
-	DrawTexturePro(*(metaData.textureAtlas), img.textureAtlasCoords, img.screenCoords, {0, 0}, 0.0f, RAYWHITE);
+void Player::Draw(RenderMetaData metaData) {
+	DrawTexturePro(*(metaData.textureAtlas), textureAtlasCoords[curAnimFrameIndex], img.screenCoords, {0, 0}, 0.0f, RAYWHITE);
+	if ((int)(GetTime()* 60) % 10 == 0) {
+		++curAnimFrameIndex;
+		if (curAnimFrameIndex >= 3) {
+			curAnimFrameIndex = 0;
+		}
+	}
 }
 
 /// only allowing the movement on the y coordinate
