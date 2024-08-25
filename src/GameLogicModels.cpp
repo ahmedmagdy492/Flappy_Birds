@@ -1,6 +1,6 @@
 #include "include\Models.h"
 
-Player::Player() : score(0), rotation(0.0f) {
+Player::Player() : score(0), rotation(0.0f), velocity({0.0f, 0.0f}) {
 	float height = GetScreenHeight();
 	float width = GetScreenWidth();
 
@@ -10,6 +10,8 @@ Player::Player() : score(0), rotation(0.0f) {
 
 void Player::Draw(RenderMetaData metaData) {
 	DrawTexturePro(*(metaData.textureAtlas), textureAtlasCoords[curAnimFrameIndex], img.screenCoords, {0, 0}, rotation, RAYWHITE);
+
+	// Player Flying Animation
 	if ((int)(GetTime()* 60) % 10 == 0) {
 		++curAnimFrameIndex;
 		if (curAnimFrameIndex >= NO_OF_PLAYER_ANIM_FRAMES) {
@@ -20,9 +22,15 @@ void Player::Draw(RenderMetaData metaData) {
 
 /// only allowing the movement on the y coordinate
 void Player::Move(Vector2 velocity) {
-	if ((img.screenCoords.y + velocity.y) > 0) {
-		img.screenCoords.y += velocity.y;
+	this->velocity.y += velocity.y;
+	if ((img.screenCoords.y + this->velocity.y) > 0) {
+		float currentVelocity = this->velocity.y * GetFrameTime() * PLAYER_SPEED;
+		img.screenCoords.y += currentVelocity;
 		//rotation = velocity.y * PLAYER_ROTATION_SPEED;
+	}
+	else {
+		float currentVelocity = this->velocity.y * GetFrameTime() * PLAYER_SPEED;
+		img.screenCoords.y += currentVelocity;
 	}
 }
 

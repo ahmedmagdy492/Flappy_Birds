@@ -31,6 +31,7 @@ class Player {
 private:
 	unsigned int score;
 	float rotation;
+	Vector2 velocity;
 	ImageUI img;
 	bool isDead = false;
 	Rectangle textureAtlasCoords[NO_OF_PLAYER_ANIM_FRAMES] = {

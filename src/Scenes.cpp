@@ -194,13 +194,13 @@ void GameScene::Update() {
 	if (hasStarted) {
 		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 			PlaySound(swooshingSound);
-			Vector2 velocity = { 0.0f, -30.0f * PLAYER_MASS };
+			Vector2 velocity = { 0.0f, -50.0f };
 			if (!player.IsDead()) {
 				player.Move(velocity);
 			}
 		}
 		else {
-			Vector2 velocity = { 0.0f, 1.5f * GRAVITY_FORCE };
+			Vector2 velocity = { 0.0f, 1.5f };
 			if (!player.IsDead()) {
 				player.Move(velocity);
 			}
