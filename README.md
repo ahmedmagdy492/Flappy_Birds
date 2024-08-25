@@ -8,6 +8,6 @@
 - added the real flappy bird font
 - added the bird fly animation
 
-[flappy_demo.mp4](https://github.com/ahmedmagdy492/Flappy_Birds/raw/master/flappy_demo.mp4)
+<img src="flappy_demo.gif">
 
 <a href="https://www.youtube.com/watch?v=U0_eygq-a-4">Youtube Demo here</a>
